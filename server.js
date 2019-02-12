@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const images = require("./routes/image-router");
+const upload = require("express-fileupload");
 
 var customCors = function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -20,17 +22,20 @@ var customCors = function(req, res, next) {
 app.use(customCors);
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 
+app.use("/uploads", express.static(__dirname + "/uploads"));
 //db config
 const db = require("./config/keys").mongoURI;
 
 //Connect to mongoDB
-// mongoose
-//   .connect(db, { useNewUrlParser: true })
-//   .then(() => console.log("mongoDB connected"))
-//   .catch(err => console.log(err));
+mongoose
+  .connect(db, { useNewUrlParser: true })
+  .then(() => console.log("mongoDB connected"))
+  .catch(err => console.log(err));
 
 const port = process.env.PORT || 5000;
-
+app.use(bodyParser.json());
+app.use(upload());
 app.listen(port, () => console.log(`Server running on port ${port}`));
+
+app.use("/images", images);
