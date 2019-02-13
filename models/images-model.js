@@ -12,7 +12,11 @@ const imagesSchema = new Schema({
     {
       type: String
     }
-  ]
+  ],
+  date: {
+    type: Date,
+    default: Date.now()
+  }
 });
 
 //model registration
