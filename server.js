@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const images = require("./routes/image-router");
 const upload = require("express-fileupload");
+const fs = require("fs");
 
 var customCors = function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -23,7 +24,11 @@ app.use(customCors);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use("/uploads", express.static(__dirname + "/uploads"));
+const dir = __dirname + "/uploads";
+app.use("/uploads", express.static(dir));
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir);
+}
 //db config
 const db = require("./config/keys").mongoURI;
 
